@@ -23,11 +23,15 @@ pipeline {
             }
         }
         stage("all of the stuff"){
-          def branchNames = env.BRANCH_NAME
             steps {
+              script {
+                def branchNames = env.BRANCH_NAME
+
                 sh 'mkdir -p /kj_deployments/kelmik_${branchNames}'
                 sh 'cp -r * /kj_deployments/kelmik_${branchNames}'
                 sh 'mv /kj_deployments/kelmik_${branchNames}/src/index.html /kj_deployments/kelmik_${branchNames}/index.html'
+              }
+                
             }
         }
     }
