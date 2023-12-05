@@ -32,6 +32,9 @@ pipeline {
                     catchError {
                         // Build Docker image
                         sh "docker build -t ${dockerImageTag} ."
+
+                      //Run container
+                      sh "docker run -p 3000:3000 my-node-app"
                     }
                 }
             }
