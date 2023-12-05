@@ -32,9 +32,6 @@ pipeline {
                     catchError {
                         // Build Docker image
                         sh "docker build -t ${dockerImageTag} ."
-
-                        // Push Docker image
-                        sh "docker push ${dockerImageTag}"
                     }
                 }
             }
