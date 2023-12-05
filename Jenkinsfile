@@ -27,7 +27,7 @@ pipeline {
             steps {
                 script {
                     def branchName = env.BRANCH_NAME
-                    def dockerImageTag = "multibranch_pipeline/${branchName}:latest"
+                    def dockerImageTag = "kj_deployments/kelmik/${branchName}:latest"
 
                     catchError {
                         // Build Docker image
@@ -44,7 +44,6 @@ pipeline {
     post {
         failure {
             echo 'Pipeline failed!'
-            // Add additional failure handling steps here if needed
         }
     }
 }
