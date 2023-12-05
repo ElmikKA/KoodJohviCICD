@@ -10,29 +10,41 @@ pipeline {
             }
         }
         stage("npm install") {
-            
             steps {
                 echo 'Npm installed'
                 sh 'npm install'
             }
         }
-        stage("build application"){
+
+        stage("Build Application") {
             steps {
                 echo 'Building application'
                 sh 'npm run build'
             }
         }
-        stage("all of the stuff"){
-            steps {
-              script {
-                def branchNames = env.BRANCH_NAME
 
-                sh 'mkdir -p /kj_deployments/kelmik_${branchNames}'
-                sh 'cp -r * /kj_deployments/kelmik_${branchNames}'
-                sh 'mv /kj_deployments/kelmik_${branchNames}/src/index.html /kj_deployments/kelmik_${branchNames}/index.html'
-              }
-                
+        stage("Build and Push Container") {
+            steps {
+                script {
+                    def branchName = env.BRANCH_NAME
+                    def dockerImageTag = "multibranch_pipeline/${branchName}:latest"
+
+                    catchError {
+                        // Build Docker image
+                        sh "docker build -t ${dockerImageTag} ."
+
+                        // Push Docker image
+                        sh "docker push ${dockerImageTag}"
+                    }
+                }
             }
+        }
+    }
+
+    post {
+        failure {
+            echo 'Pipeline failed!'
+            // Add additional failure handling steps here if needed
         }
     }
 }
